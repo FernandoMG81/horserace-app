@@ -1,0 +1,22 @@
+.restcards {
+  position: fixed;
+  right: 8px;
+  bottom: 16px;
+  text-align: left;
+  background: rgba(0, 0, 0, .7);
+  padding: 8px;
+  border-radius: 32px;
+  opacity: .95;
+  backdrop-filter: blur(8px);
+}
+
+.restcards span {
+  font-size: 14px;
+  color: #09f;
+  opacity: .8;
+}
+
+.restcards h4, .footer h5 {
+  margin: 0;
+  display: flex;
+}

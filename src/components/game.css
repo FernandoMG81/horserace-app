@@ -1,0 +1,26 @@
+.board {
+  width: fit-content;
+  margin: 10px;
+  text-align: center;
+}
+
+.board .game {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.clue{
+  display: flex;
+  flex-direction: column;
+}
+
+.players{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  justify-content: space-around;
+  gap: 10px;
+  align-items: center;
+  align-content: center;
+}
