@@ -16,7 +16,7 @@
 }
 
 .clue .border:first-child {
-  background-image: url('/src/assets/finish-line.webp');
+  background-image: url('/src/images/finish-line.webp');
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;

@@ -1,11 +1,6 @@
 @font-face{
-  font-family: Fafers;
-  src: url('/src/assets/fafers_handwriting_font/FAFERS.TTF');
-}
-
-@font-face{
   font-family: Hand_of_Sean;
-  src: url('/src/assets/hand_of_sean/Hand_Of_Sean_Demo.woff2') format('woff2');
+  src: url('/src/fonts/Hand_Of_Sean_Demo.woff2') format('woff2');
 }
 
 h3{
@@ -13,7 +8,7 @@ h3{
 }
 .article{
   max-width: 800px;
-  background-image: url('/src/assets/fondo-hoja.webp');
+  background-image: url('/src/images/fondo-hoja.webp');
   border: 4px solid aquamarine;
   border-radius: 18px;
   background-repeat: repeat-y;

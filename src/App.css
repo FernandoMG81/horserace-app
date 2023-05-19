@@ -1,5 +1,5 @@
 html{
-  background-image: url('./assets/pool_backround.webp');
+  background-image: url('/src/images/pool_backround.webp');
   background-size: cover;
   background-repeat: repeat;
   background-position: center;

@@ -19,7 +19,7 @@ interface Props {
 
 export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
 
-  const soundUrl = { game: '/src/assets/songs/game_song.ogg', win: '/src/assets/songs/win.ogg' }
+  const soundUrl = { game: '/src/sounds/game_song.ogg', win: '/src/sounds/win.ogg' }
   const [playSoundGame, { stop: stopSoundGame }] = useSound(soundUrl.game)
   const [winSoundGame] = useSound(soundUrl.win)
 

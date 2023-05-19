@@ -13,7 +13,7 @@ export const Start = () => {
   const [playGame, setPlayGame] = useToggle()
   const [settings, setSettings] = useState<Settings | null>(null)
 
-  const soundUrl = '/src/assets/songs/open_song.ogg'
+  const soundUrl = '/src/sounds/open_song.ogg'
 
   const [playSoundOpen, { stop: stopSoundOpen }] = useSound(soundUrl)
 

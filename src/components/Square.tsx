@@ -13,9 +13,9 @@ export const Square = ({ isVisible, isPlayed, src }: Props) => {
     <div className='border'>
       {
         isVisible
-          ? <img className={className} src={`/src/assets/cards/${src ?? ''}`} alt={src} />
+          ? <img className={className} src={`/src/images/cards/${src ?? ''}`} alt={src} />
           : isPlayed
-            ? <img className={className} src='/src/assets/cards/back.webp' alt={src} />
+            ? <img className={className} src='/src/images/cards/back.webp' alt={src} />
             : <div className={className} />
       }
 
