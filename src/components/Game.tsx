@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Square } from './Square'
 import './game.css'
-import { cards as cardsService } from '../services/cards'
+import { cards as cardsService, descatedCards } from '../services/cards'
 import { Card, HorsePosition, Players, Settings } from '../types'
 import { WinnerModal } from './WinnerModal'
 import { RestOfCards } from './RestOfCards'
@@ -10,6 +10,15 @@ import confetti from 'canvas-confetti'
 import CountdownModal from './Countdown'
 import useToggle from '../hook/useToggle'
 import useSound from 'use-sound'
+import gameSound from '/src/sounds/game_song.ogg'
+import winSound from '/src/sounds/win.ogg'
+
+// import caballoDeEspadas from '/public/images/cards/11-de-espadas.webp';
+// import caballoDeBastos from '/public/images/cards/11-de-basto.webp';
+// import caballoDeOros from '/public/images/cards/11-de-oro.webp';
+// import caballoDeCopas from '/public/images/cards/11-de-copas.webp';
+import comodin from '../images/cards/empty.webp'
+
 
 interface Props {
   settings: Settings
@@ -19,9 +28,8 @@ interface Props {
 
 export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
 
-  const soundUrl = { game: '/src/sounds/game_song.ogg', win: '/src/sounds/win.ogg' }
-  const [playSoundGame, { stop: stopSoundGame }] = useSound(soundUrl.game)
-  const [winSoundGame] = useSound(soundUrl.win)
+  const [playSoundGame, { stop: stopSoundGame }] = useSound(gameSound)
+  const [winSoundGame] = useSound(winSound)
 
   const [newPlayers, setNewPlayers] = useState<Players[]>([])
   const [deck, setDeck] = useState<Card[]>(cardsService)
@@ -83,11 +91,17 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
     }
   }, [board, isPlaying])
 
-  const handleScroll = (ref: HTMLElement | null) => {
+  const handleScroll = (ref: HTMLElement | null, top: boolean = false) => {
     if (ref !== null) {
-      const calc = Math.min(...Object.values(horsesPosition))
-      const cardDimension = ref.offsetHeight / settings.length
-      const distance = cardDimension * calc + cardDimension
+      let distance
+      if(top){
+        distance = 0
+      }else{
+        
+        const calc = Math.min(...Object.values(horsesPosition))
+        const cardDimension = ref.offsetHeight / settings.length
+        distance = cardDimension * calc + cardDimension
+      }
       window.scrollTo({
         top: distance,
         left: 0,
@@ -101,8 +115,8 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
     const copyOfDeck: Card[] = [...deck]
 
     // Agregar los dos jokers al principio porque no se usan
-    newArray.push({ id: 49, number: 'Comodin', url: 'empty.webp', played: false, suit: 'comodin' },
-      { id: 50, number: 'Comodin', url: 'empty.webp', played: false, suit: 'comodin' })
+    newArray.push({ id: 49, number: 'Comodin', url: comodin, played: false, suit: 'comodin' },
+    { id: 50, number: 'Comodin', url: comodin, played: false, suit: 'comodin' })
 
     while (newArray.length < settings.length) {
       const cardId = getRandomCard()
@@ -152,6 +166,7 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
       setIsPlaying()
       setWinner(winner)
       winSoundGame()
+      handleScroll(containerRef.current, true)
       confetti({
         particleCount: 100
       })
@@ -241,7 +256,9 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
                 key={`${laneIndex}-${squareIndex}`}
                 isVisible={square}
                 isPlayed={false}
-                src={`11-de-${Object.keys(horsesPosition)[laneIndex]}.webp`}
+                src={descatedCards
+                    .find(card => card.number
+                       === Object.keys(horsesPosition)[laneIndex])?.url}
               />
             ))}
           </section>

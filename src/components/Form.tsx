@@ -3,6 +3,7 @@ import { Settings } from '../types'
 import { useRef, useState } from 'react'
 import { DEFAULT_BET, DEFAULT_LENGTH_OF_RACE } from '../constants'
 import { capitalize } from '../logic/functions'
+import {descatedCards} from '../services/cards'
 
 interface Props {
   setSettings: (settings: Settings) => void
@@ -109,7 +110,7 @@ export const Form = ({ setSettings }: Props) => {
 
       <div className='input-name'>
         <label htmlFor='player 1'>
-          <img src='/src/images/cards/11-de-espadas.webp' alt='image of horse of swords' />
+          <img src={descatedCards[0].url} alt='image of horse of swords' />
         </label>
         <input
           type='text'
@@ -123,7 +124,7 @@ export const Form = ({ setSettings }: Props) => {
 
       <div className='input-name'>
         <label htmlFor='player 2'>
-          <img src='/src/images/cards/11-de-bastos.webp' alt='image of horse of clubs' />
+          <img src={descatedCards[1].url} alt='image of horse of clubs' />
         </label>
         <input
           type='text'
@@ -137,7 +138,7 @@ export const Form = ({ setSettings }: Props) => {
 
       <div className='input-name'>
         <label htmlFor='player 3'>
-          <img src='/src/images/cards/11-de-copas.webp' alt='image of horse of cups' />
+          <img src={descatedCards[3].url} alt='image of horse of cups' />
         </label>
         <input
           type='text'
@@ -151,7 +152,7 @@ export const Form = ({ setSettings }: Props) => {
 
       <div className='input-name'>
         <label htmlFor='player 4'>
-          <img src='/src/images/cards/11-de-oros.webp' alt='image of horse of coins' />
+          <img src={descatedCards[2].url} alt='image of horse of coins' />
         </label>
         <input
           type='text'

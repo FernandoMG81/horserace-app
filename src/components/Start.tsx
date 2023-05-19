@@ -7,15 +7,14 @@ import { Header } from './Header'
 import { Manual } from './Manual'
 import useSound from 'use-sound'
 import useToggle from '../hook/useToggle'
+import openSound from '/src/sounds/open_song.ogg'
 import './start.css'
 export const Start = () => {
 
   const [playGame, setPlayGame] = useToggle()
   const [settings, setSettings] = useState<Settings | null>(null)
 
-  const soundUrl = '/src/sounds/open_song.ogg'
-
-  const [playSoundOpen, { stop: stopSoundOpen }] = useSound(soundUrl)
+  const [playSoundOpen, { stop: stopSoundOpen }] = useSound(openSound)
 
   return (
     <main className='main'>

@@ -1,5 +1,5 @@
 import './square.css'
-
+import backCard from '../images/cards/back.webp'
 interface Props {
   isVisible: boolean
   isPlayed: boolean
@@ -13,9 +13,9 @@ export const Square = ({ isVisible, isPlayed, src }: Props) => {
     <div className='border'>
       {
         isVisible
-          ? <img className={className} src={`/src/images/cards/${src ?? ''}`} alt={src} />
+          ? <img className={className} src={src} alt={src} />
           : isPlayed
-            ? <img className={className} src='/src/images/cards/back.webp' alt={src} />
+            ? <img className={className} src={backCard} alt={src} />
             : <div className={className} />
       }
 
