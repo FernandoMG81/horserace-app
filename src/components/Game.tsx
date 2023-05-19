@@ -112,8 +112,8 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
     const copyOfDeck: Card[] = [...deck]
 
     // Agregar los dos jokers al principio porque no se usan
-    newArray.push({ id: 49, number: 'Comodin', url: 'empty.png', played: false, suit: 'comodin' },
-      { id: 50, number: 'Comodin', url: 'empty.png', played: false, suit: 'comodin' })
+    newArray.push({ id: 49, number: 'Comodin', url: 'empty.webp', played: false, suit: 'comodin' },
+      { id: 50, number: 'Comodin', url: 'empty.webp', played: false, suit: 'comodin' })
 
     while (newArray.length < settings.length) {
       const cardId = getRandomCard()
@@ -240,7 +240,7 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
                 key={`${laneIndex}-${squareIndex}`}
                 isVisible={square}
                 isPlayed={false}
-                src={`11-de-${Object.keys(horsesPosition)[laneIndex]}.png`}
+                src={`11-de-${Object.keys(horsesPosition)[laneIndex]}.webp`}
               />
             ))}
           </section>

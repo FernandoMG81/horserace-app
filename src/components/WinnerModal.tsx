@@ -14,7 +14,6 @@ export function WinnerModal ({ winner, bet, resetGame }: Props) {
   return (
     <section className='winner'>
       <div className='text'>
-
         <header className='win'>
           {winner.name}
         </header>
