@@ -1,17 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Square } from './Square'
 import './game.css'
 import { cards as cardsService } from '../services/cards'
 import { Card, HorsePosition, Players, Settings } from '../types'
 import { WinnerModal } from './WinnerModal'
 import { RestOfCards } from './RestOfCards'
+import { getRandomCard, shuffleArray } from '../logic/functions'
+import confetti from 'canvas-confetti'
+import CountdownModal from './Countdown'
+import useToggle from '../hook/useToggle'
+import useSound from 'use-sound'
 
 interface Props {
   settings: Settings
+  setSettings: (settings: Settings | null) => void
   setPlayGame: () => void
 }
 
-export const Game = ({ settings, setPlayGame }: Props) => {
+export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
+
+  const soundUrl = { game: '/src/assets/songs/game_song.ogg', win: '/src/assets/songs/win.ogg' }
+  const [playSoundGame, { stop: stopSoundGame }] = useSound(soundUrl.game)
+  const [winSoundGame] = useSound(soundUrl.win)
 
   const [newPlayers, setNewPlayers] = useState<Players[]>([])
   const [deck, setDeck] = useState<Card[]>(cardsService)
@@ -24,8 +34,18 @@ export const Game = ({ settings, setPlayGame }: Props) => {
     copas: settings.length,
     oros: settings.length
   })
-  const [winner, setWinner] = useState<Players>()
+  const [winner, setWinner] = useState<Players | null>(null)
+  const [isPlaying, setIsPlaying] = useToggle()
+  const [cardPlayedIndex, setCardPlayedIndex] = useState<number>(settings.length)
+  const [showCountdown, setShowCountdown] = useToggle()
+  const containerRef = useRef(null)
 
+  const handleCountdownFinish = () => {
+    setShowCountdown()
+    setIsPlaying()
+  }
+
+  // Init settings
   useEffect(() => {
     const lane = Array(settings.length).fill(false)
     const newBoard = [[...lane, true], [...lane, true], [...lane, true], [...lane, true]]
@@ -33,20 +53,58 @@ export const Game = ({ settings, setPlayGame }: Props) => {
     setBoard(newBoard)
     // Seteamos los jugadores
     setNewPlayers(settings.players)
-
     // al azar quitamos las cartas de la mesa
     setCardsOnBoard(getCardsForBoard())
     // Mezclamos las cartas restantes
-
+    setShowCountdown()
   }, [settings])
 
   useEffect(() => {
-    checkCardOnBoard()
-    checkWinner()
-  }, [horsesPosition])
+    if (isPlaying && winner === null) {
+      const cardToGoBack = checkIfCardHasToGoBack()
+      if (cardToGoBack) {
+        const newArray = [...cardsOnBoard]
+        const card = newArray[cardPlayedIndex - 1]
+        if (card != null) {
+          moveCardFromBoard(card.suit, 'backward')
+          newArray[cardPlayedIndex - 1].played = true
+          setCardPlayedIndex(prev => prev - 1)
+          setCardsOnBoard(newArray)
+        }
+      } else {
+        setTimeout(async () => {
+          const newCurrentIndexCard = currentIndexCard + 1
+          setCurrentIndexCard(newCurrentIndexCard)
+          await moveCardFromBoard(deck[newCurrentIndexCard].suit, 'forward')
+        }, 1000)
 
-  const getRandomCard = (): number => {
-    return Math.floor(Math.random() * 48) + 1
+      }
+      handleScroll(containerRef.current)
+      const winner = checkWinner()
+      if (winner !== null) {
+        stopSoundGame()
+        setIsPlaying()
+        setWinner(winner)
+        winSoundGame()
+        confetti({
+          particleCount: 100
+        })
+
+      }
+    }
+  }, [board, isPlaying])
+
+  const handleScroll = (ref: HTMLElement | null) => {
+    if (ref !== null) {
+      const calc = Math.min(...Object.values(horsesPosition))
+      const cardDimension = ref.offsetHeight / settings.length
+      const distance = cardDimension * calc + cardDimension
+      window.scrollTo({
+        top: distance,
+        left: 0,
+        behavior: 'smooth'
+      })
+    }
   }
 
   const getCardsForBoard = (): Card[] => {
@@ -64,6 +122,7 @@ export const Game = ({ settings, setPlayGame }: Props) => {
 
       if (index !== -1 && cartToCheck !== undefined) {
         copyOfDeck.splice(index, 1)
+        cartToCheck.played = false
         newArray.push(cartToCheck)
       }
 
@@ -73,121 +132,116 @@ export const Game = ({ settings, setPlayGame }: Props) => {
     return newArray
   }
 
-  const shuffleArray = (array: Card[]) => {
-    function random () {
-      return Math.random() - 0.5
-    }
-    array.sort(random)
-
-    return array
-  }
-
   const checkWinner = () => {
     for (const [prop, value] of Object.entries(horsesPosition)) {
       if (value === 0) {
         const winnerName = settings.players.find(value => value.horse === prop)
         if (winnerName != null) {
-          setWinner({ name: winnerName?.name, horse: winnerName?.horse })
-          console.log(`El ganador es ${prop}`)
+          return { name: winnerName?.name, horse: winnerName?.horse }
         }
       }
     }
+    return null
   }
 
-  const checkCardOnBoard = () => {
+  const checkIfCardHasToGoBack = () => {
     const { bastos, copas, espadas, oros } = horsesPosition
-    const cardsLength = cardsOnBoard.length
+    const cardsLength = cardPlayedIndex
     if (bastos < cardsLength - 1 &&
         copas < cardsLength - 1 &&
         espadas < cardsLength - 1 &&
         oros < cardsLength - 1) {
-      const newArray = [...cardsOnBoard]
-      const card = newArray.pop()
-      setTimeout(() => {
-        moveCardFromBoard(card.suit, 'backward')
-      }, 500)
-      setCardsOnBoard(newArray)
+      return true
     }
+    return false
   }
 
-  const moveCardFromBoard = (suit: string, direction: 'forward' | 'backward') => {
-    const newBoard = structuredClone(board)
-    const value = direction === 'forward' ? 1 : -1
-
-    switch (suit) {
-      case 'espadas':
-        newBoard[0][horsesPosition.espadas] = false
-        newBoard[0][horsesPosition.espadas - value] = true
-        setBoard(newBoard)
-        setHorsesPosition(prevState => {
-          return {
-            ...prevState,
-            espadas: prevState.espadas - value
-          }
-        })
-        break
-
-      case 'bastos':
-        newBoard[1][horsesPosition.bastos] = false
-        newBoard[1][horsesPosition.bastos - value] = true
-        setBoard(newBoard)
-        setHorsesPosition(prevState => {
-          return {
-            ...prevState,
-            bastos: prevState.bastos - value
-          }
-        })
-        break
-
-      case 'copas':
-        newBoard[2][horsesPosition.copas] = false
-        newBoard[2][horsesPosition.copas - value] = true
-        setBoard(newBoard)
-        setHorsesPosition(prevState => {
-          return {
-            ...prevState,
-            copas: prevState.copas - value
-          }
-        })
-        break
-
-      case 'oros':
-        newBoard[3][horsesPosition.oros] = false
-        newBoard[3][horsesPosition.oros - value] = true
-        setBoard(newBoard)
-        setHorsesPosition(prevState => {
-          return {
-            ...prevState,
-            oros: prevState.oros - value
-          }
-        })
-        break
-
-    }
-  }
-
-  const handleOnClick = () => {
-    const newCurrentIndexCard = currentIndexCard + 1
+  const moveCardFromBoard = async (suit: string, direction: 'forward' | 'backward') => {
     setTimeout(() => {
-      moveCardFromBoard(deck[newCurrentIndexCard].suit, 'forward')
+
+      const newBoard = structuredClone(board)
+      const value = direction === 'forward' ? 1 : -1
+      if (newBoard === null) return
+      switch (suit) {
+        case 'espadas':
+          newBoard[0][horsesPosition.espadas] = false
+          newBoard[0][horsesPosition.espadas - value] = true
+          setBoard(newBoard)
+          setHorsesPosition(prevState => {
+            return {
+              ...prevState,
+              espadas: prevState.espadas - value
+            }
+          })
+          break
+
+        case 'bastos':
+          newBoard[1][horsesPosition.bastos] = false
+          newBoard[1][horsesPosition.bastos - value] = true
+          setBoard(newBoard)
+          setHorsesPosition(prevState => {
+            return {
+              ...prevState,
+              bastos: prevState.bastos - value
+            }
+          })
+          break
+
+        case 'copas':
+          newBoard[2][horsesPosition.copas] = false
+          newBoard[2][horsesPosition.copas - value] = true
+          setBoard(newBoard)
+          setHorsesPosition(prevState => {
+            return {
+              ...prevState,
+              copas: prevState.copas - value
+            }
+          })
+          break
+
+        case 'oros':
+          newBoard[3][horsesPosition.oros] = false
+          newBoard[3][horsesPosition.oros - value] = true
+          setBoard(newBoard)
+          setHorsesPosition(prevState => {
+            return {
+              ...prevState,
+              oros: prevState.oros - value
+            }
+          })
+          break
+      }
     }, 1000)
-    setCurrentIndexCard(newCurrentIndexCard)
+  }
+
+  // const handleOnClick = async () => {
+  //   const newCurrentIndexCard = currentIndexCard + 1
+  //   await moveCardFromBoard(deck[newCurrentIndexCard].suit, 'forward')
+  //   setCurrentIndexCard(newCurrentIndexCard)
+  // }
+
+  const resetGame = () => {
+    setSettings(null)
+    setDeck(cardsService)
+    setPlayGame()
   }
 
   return (
-    <main className='board'>
-      <h2>{settings.bet}</h2>
+    <main className='board' ref={containerRef}>
+      <div>
+        {showCountdown && <>{playSoundGame()}<CountdownModal onFinish={handleCountdownFinish} /></>}
+      </div>
+      <section><h2 className='h2'>APUESTA: ${settings.bet}</h2></section>
       <section className='game'>
         {board?.map((lane, laneIndex) => (
           <section key={`${laneIndex}`} className='clue'>
             {lane.map((square, squareIndex) => (
               <Square
                 key={`${laneIndex}-${squareIndex}`}
-                isActive={square}
+                isVisible={square}
+                isPlayed={false}
                 src={`11-de-${Object.keys(horsesPosition)[laneIndex]}.png`}
-              >
-                {String(square)}
-              </Square>
+              />
             ))}
           </section>
         ))}
@@ -197,12 +251,10 @@ export const Game = ({ settings, setPlayGame }: Props) => {
               return (
                 <Square
                   key={card.id}
-                  isActive
+                  isVisible={card.played}
+                  isPlayed={!card.played}
                   src={card.url}
-                >
-                  {String(card.suit)}
-                  {String(i)}
-                </Square>
+                />
               )
             })
           }
@@ -219,20 +271,15 @@ export const Game = ({ settings, setPlayGame }: Props) => {
           })
         }
       </section>
-      <section className='rest-cards'>
-        {
-          deck[currentIndexCard]?.suit
-        }
-      </section>
-      <button onClick={handleOnClick}>
+      {/* <button onClick={handleOnClick}>
         Sacar carta
-      </button>
+      </button> */}
       <RestOfCards
         currentCard={deck[currentIndexCard]}
       />
       <WinnerModal
         winner={winner}
-        resetGame={() => console.log('reinicio')}
+        resetGame={resetGame}
         bet={settings.bet}
       />
     </main>

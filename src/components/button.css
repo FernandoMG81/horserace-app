@@ -9,11 +9,7 @@
 * {box-sizing: border-box;}
 *:before, *:after {box-sizing: border-box;}
 
-h1 {
-  color: var(--solid);
-  font-size: 2.5rem;
-  margin-top: 6rem; 
-}
+
 .btn {
   position: relative;
   margin: 0 auto;
@@ -25,7 +21,8 @@ h1 {
   text-align: center;
   font-size: 1.3em;
   line-height: 2em;
-  cursor: pointer;  
+  cursor: pointer;
+  margin-bottom: 15px;  
 }
 .dot {
   content: '';

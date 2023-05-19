@@ -1,22 +1,22 @@
 import './square.css'
 
 interface Props {
-  children?: string[] | string
-  isActive: boolean
-  src?: string
+  isVisible: boolean
+  isPlayed: boolean
+  src?: string | undefined
 }
 
-export const Square = ({ children, isActive, src }: Props) => {
-  const className = `square ${isActive ? 'is-selected' : ''}`
-  console.log(src)
+export const Square = ({ isVisible, isPlayed, src }: Props) => {
+  const className = `square ${isVisible ? 'is-visible' : ''}`
+
   return (
     <div className='border'>
       {
-        isActive
-          ? <img className={className} src={`/src/assets/cards/${src}`} alt={src} />
-          : <div className={className}>
-            {children}
-          </div>
+        isVisible
+          ? <img className={className} src={`/src/assets/cards/${src ?? ''}`} alt={src} />
+          : isPlayed
+            ? <img className={className} src='/src/assets/cards/back.png' alt={src} />
+            : <div className={className} />
       }
 
     </div>

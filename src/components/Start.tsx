@@ -1,38 +1,56 @@
 import { useState } from 'react'
-import useToggle from '../hook/useToggle'
 import { Settings } from '../types'
 import { Button } from './Button'
 import { Form } from './Form'
 import { Game } from './Game'
 import { Header } from './Header'
+import { Manual } from './Manual'
+import useSound from 'use-sound'
+import useToggle from '../hook/useToggle'
 import './start.css'
 export const Start = () => {
 
   const [playGame, setPlayGame] = useToggle()
   const [settings, setSettings] = useState<Settings | null>(null)
 
-  return (
-    <main>
+  const soundUrl = '/src/assets/songs/open_song.ogg'
 
+  const [playSoundOpen, { stop: stopSoundOpen }] = useSound(soundUrl)
+
+  return (
+    <main className='main'>
       <Header />
       {
         !playGame
-          ? <Button handleOnClick={setPlayGame}>JUGAR</Button>
+          ? <>
+            <Button handleOnClick={setPlayGame}>JUGAR</Button>
+            <Manual />
+          </>
           : null
       }
       {
-        playGame && settings === null
-          ? <Form setSettings={setSettings} />
-          : null
+      playGame && settings === null
+        ? <>
+          <Form setSettings={setSettings} />
+          {playSoundOpen()}
+        </>
+        : null
       }
       {
         playGame && settings !== null
-          ? <Game
+          ? <>
+            <Game
               settings={settings}
+              setSettings={setSettings}
               setPlayGame={setPlayGame}
             />
+            {
+              stopSoundOpen()
+            }
+          </>
           : null
       }
+
     </main>
   )
 }

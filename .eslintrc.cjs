@@ -20,6 +20,8 @@ module.exports = {
       }
     ],
     'padded-blocks': 'off',
-    '@typescript-eslint/consistent-type-definitions': 'off'
+    '@typescript-eslint/consistent-type-definitions': 'off',
+    'react/jsx-closing-tag-location': 'off',
+    'react-hooks/exhaustive-deps': 'off'
   }
 }

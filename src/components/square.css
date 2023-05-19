@@ -1,20 +1,19 @@
 .square {
   min-width: 120px;
   height: 180px;
-  border: 2px solid #eee;
   border-radius: 5px;
   display: grid;
   place-items: center;
   cursor: pointer;
   font-size: 28px;
-  visibility: hidden;
+  visibility: visible;
 }
 
 .border{
   border-top: 3px dotted #000000;
   border-left: 3px dotted transparent;
 }
-.is-selected{
+.is-visible{
   visibility: visible;
 }
 

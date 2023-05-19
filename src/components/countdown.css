@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Unlock&display=swap');
+.spinner {
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  margin-left: -90px;
+  margin-top: -90px;
+  border-radius: 60%;
+  border: 40px solid #cccccc;
+  border-top-color: #555;
+  border-right-color:#555; 
+  animation: spin 1.2s linear infinite;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Unlock', cursive;
+  text-align: center;
+  color: white;
+}
+
+@keyframes countdown {
+  from { font-size: 120px; }
+  to { font-size: 24px; }
+}
+
+.countdown-number {
+  animation-name: countdown;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  font-size: 64px;
+}

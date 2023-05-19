@@ -15,7 +15,7 @@ header{
   height: auto;
 }
 
-h2{
+header h2{
   margin-top: 10px;
   margin-bottom: -22px;
   background-color: red;

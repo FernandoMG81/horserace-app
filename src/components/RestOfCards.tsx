@@ -7,14 +7,16 @@ interface Props {
 }
 
 export const RestOfCards = ({ currentCard }: Props) => {
+  if (currentCard === undefined) return null
 
   return (
     <section className='restcards'>
       <Square
-        isActive
-        src={currentCard.url}
+        isVisible
+        isPlayed
+        src={currentCard?.url}
       >
-        {currentCard.suit}
+        {currentCard?.suit}
       </Square>
 
     </section>

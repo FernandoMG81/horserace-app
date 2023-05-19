@@ -1,15 +1,15 @@
 import { Players } from '../types'
+import { Button } from './Button'
 import './winnerModal.css'
 
 interface Props {
-  winner: undefined | Players
+  winner: Players | null
   bet: number
   resetGame: () => void
 }
 
 export function WinnerModal ({ winner, bet, resetGame }: Props) {
   if (winner == null) return null
-  console.log(winner)
   const winnerText = `Ganó la suma de  $${bet}`
   return (
     <section className='winner'>
@@ -20,7 +20,7 @@ export function WinnerModal ({ winner, bet, resetGame }: Props) {
         </header>
         <h2>{winnerText} </h2>
         <footer onClick={resetGame}>
-          <button>Volver al inicio</button>
+          <Button>REINICIAR JUEGO</Button>
         </footer>
       </div>
     </section>
