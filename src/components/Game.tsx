@@ -72,25 +72,14 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
           setCardsOnBoard(newArray)
         }
       } else {
-        setTimeout(async () => {
+        setTimeout(() => {
           const newCurrentIndexCard = currentIndexCard + 1
           setCurrentIndexCard(newCurrentIndexCard)
-          await moveCardFromBoard(deck[newCurrentIndexCard].suit, 'forward')
+          moveCardFromBoard(deck[newCurrentIndexCard].suit, 'forward')
         }, 1000)
 
       }
       handleScroll(containerRef.current)
-      const winner = checkWinner()
-      if (winner !== null) {
-        stopSoundGame()
-        setIsPlaying()
-        setWinner(winner)
-        winSoundGame()
-        confetti({
-          particleCount: 100
-        })
-
-      }
     }
   }, [board, isPlaying])
 
@@ -156,7 +145,18 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
     return false
   }
 
-  const moveCardFromBoard = async (suit: string, direction: 'forward' | 'backward') => {
+  const moveCardFromBoard = (suit: string, direction: 'forward' | 'backward') => {
+    const winner = checkWinner()
+    if (winner !== null) {
+      stopSoundGame()
+      setIsPlaying()
+      setWinner(winner)
+      winSoundGame()
+      confetti({
+        particleCount: 100
+      })
+      return
+    }
     setTimeout(() => {
 
       const newBoard = structuredClone(board)
@@ -212,6 +212,7 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
           break
       }
     }, 1000)
+
   }
 
   // const handleOnClick = async () => {
