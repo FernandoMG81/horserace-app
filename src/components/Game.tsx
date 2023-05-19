@@ -247,7 +247,7 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
         ))}
         <section className='cards-on-board'>
           {
-            cardsOnBoard.map((card, i) => {
+            cardsOnBoard.map((card) => {
               return (
                 <Square
                   key={card.id}

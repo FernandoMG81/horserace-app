@@ -15,10 +15,7 @@ export const RestOfCards = ({ currentCard }: Props) => {
         isVisible
         isPlayed
         src={currentCard?.url}
-      >
-        {currentCard?.suit}
-      </Square>
-
+      />
     </section>
   )
 }
