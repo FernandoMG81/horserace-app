@@ -27,9 +27,22 @@
   grid-template-columns: repeat(5, 1fr);
   width: 100%;
   justify-content: space-around;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
   align-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.players p{
+  font-size: 1.5rem;
+  color: black;
+}
+
+.pills div p:nth-child(-n + 4){
+  border: 2px solid rgb(243, 223, 46);
+  border-radius: 18px;
+  background: linear-gradient(45deg, #f3ec78, #db7b2b), rgba(0, 0, 0, 0.6);
 }
 
 .h2{

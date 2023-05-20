@@ -1,0 +1,19 @@
+.footer {
+  font-family: 'Unlock', cursive;
+  color: white;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 600px) {
+  .footer {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .footer {
+    font-size: 14px;
+  }
+}

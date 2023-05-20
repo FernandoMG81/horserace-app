@@ -9,6 +9,7 @@ import useSound from 'use-sound'
 import useToggle from '../hook/useToggle'
 import openSound from '/src/sounds/open_song.ogg'
 import './start.css'
+import { Footer } from './Footer'
 export const Start = () => {
 
   const [playGame, setPlayGame] = useToggle()
@@ -50,6 +51,8 @@ export const Start = () => {
           : null
       }
 
+
+      <Footer />
     </main>
   )
 }

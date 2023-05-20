@@ -278,7 +278,7 @@ export const Game = ({ settings, setSettings, setPlayGame }: Props) => {
           }
         </section>
       </section>
-      <section className='players'>
+      <section className='players pills'>
         {
           newPlayers.map((player) => {
             return (

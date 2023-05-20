@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Unlock&display=swap');
 
-main {
+.main {
   font-family: 'Unlock', cursive;
   font-size: 24px;
   line-height: 1.5;  
@@ -117,4 +117,16 @@ h4{
 .rubberBand {
   -webkit-animation-name: rubberBand;
   animation-name: rubberBand;
+}
+
+@media (max-width: 460px){
+  header h2{
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 306px){
+  header h2{
+    font-size: 22px;
+  }
 }
