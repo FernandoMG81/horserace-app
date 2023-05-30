@@ -1,6 +1,6 @@
 html{
-  background-image: url('/src/images/pool_backround.webp');
-  background-size: cover;
+  background-image: url('/src/images/pool_backround_2.webp');
+  background-size: contain;
   background-repeat: repeat;
   background-position: center;
   height: 100vh;
